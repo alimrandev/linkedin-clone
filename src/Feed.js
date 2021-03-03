@@ -1,19 +1,56 @@
 import { CalendarViewDay, Event, Subscriptions } from "@material-ui/icons";
 import CreateIcon from "@material-ui/icons/Create";
 import ImageIcon from "@material-ui/icons/Image";
-import React from "react";
+import firebase from "firebase";
+import React, { useEffect, useState } from "react";
 import "./Feed.css";
+import { db } from "./firebase";
 import InputOption from "./InputOption";
+import Post from "./Post";
 
 function Feed() {
+  const [posts, setPosts] = useState([]);
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
+  }, []);
+
+  const sendPosts = (e) => {
+    e.preventDefault();
+    //added post to database
+    db.collection("posts").add({
+      name: "Abdl Imran",
+      description: "Test",
+      massage: input,
+      photoUrl: "",
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    setInput("");
+  };
   return (
     <div className="feed">
       <div className="feed__inputContainer">
         <div className="feed__input">
           <CreateIcon />
           <form>
-            <input type="text" />
-            <button type="submit">Send</button>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button type="submit" onClick={sendPosts}>
+              Send
+            </button>
           </form>
         </div>
         <div className="feed__inputOptions">
@@ -27,6 +64,16 @@ function Feed() {
           />
         </div>
       </div>
+      {/* Post */}
+      {posts.map(({ id, data: { name, description, massage, photoUrl } }) => (
+        <Post
+          key={id}
+          name={name}
+          description={description}
+          massage={massage}
+          photoUrl={photoUrl}
+        />
+      ))}
     </div>
   );
 }
