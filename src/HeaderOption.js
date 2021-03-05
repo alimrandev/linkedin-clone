@@ -7,7 +7,6 @@ import "./HeaderOption.css";
 
 function HeaderOption({ avatar, Icon, title }) {
   const dispatch = useDispatch();
-
   const logoutOfApp = () => {
     dispatch(logout());
     auth.signOut();
@@ -20,7 +19,9 @@ function HeaderOption({ avatar, Icon, title }) {
           className="headerOption__icon"
           src={avatar}
           onClick={logoutOfApp}
-        />
+        >
+          {avatar[0]}
+        </Avatar>
       )}
       <h3 className="headerOption__title">{title}</h3>
     </div>

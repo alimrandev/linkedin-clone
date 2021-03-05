@@ -3,6 +3,9 @@ import CreateIcon from "@material-ui/icons/Create";
 import ImageIcon from "@material-ui/icons/Image";
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
+import FlipMove from "react-flip-move";
+import { useSelector } from "react-redux";
+import { selectUser } from "./features/userSlice";
 import "./Feed.css";
 import { db } from "./firebase";
 import InputOption from "./InputOption";
@@ -11,6 +14,8 @@ import Post from "./Post";
 function Feed() {
   const [posts, setPosts] = useState([]);
   const [input, setInput] = useState("");
+
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     db.collection("posts")
@@ -29,10 +34,10 @@ function Feed() {
     e.preventDefault();
     //added post to database
     db.collection("posts").add({
-      name: "Abdl Imran",
+      name: user.displayName,
       description: "Test",
       massage: input,
-      photoUrl: "",
+      photoUrl: user.photoURL,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
     setInput("");
@@ -65,15 +70,17 @@ function Feed() {
         </div>
       </div>
       {/* Post */}
-      {posts.map(({ id, data: { name, description, massage, photoUrl } }) => (
-        <Post
-          key={id}
-          name={name}
-          description={description}
-          massage={massage}
-          photoUrl={photoUrl}
-        />
-      ))}
+      <FlipMove>
+        {posts.map(({ id, data: { name, description, massage, photoUrl } }) => (
+          <Post
+            key={id}
+            name={name}
+            description={description}
+            massage={massage}
+            photoUrl={photoUrl}
+          />
+        ))}
+      </FlipMove>
     </div>
   );
 }

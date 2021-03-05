@@ -5,14 +5,17 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import PeopleIcon from "@material-ui/icons/People";
 import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "./features/userSlice";
 import "./Header.css";
 import HeaderOption from "./HeaderOption";
 function Header() {
+  const user = useSelector(selectUser);
   return (
     <div className="header">
       <div className="header__left">
         <img
-          src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1613887149~hmac=876a0fd8cc12607759b2e9d190522aad"
+          src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg"
           alt=""
         />
         <div className="header__search">
@@ -26,10 +29,7 @@ function Header() {
         <HeaderOption title="Jobs" Icon={BusinessCenterIcon} />
         <HeaderOption title="Messaging" Icon={ChatIcon} />
         <HeaderOption title="Notification" Icon={NotificationsIcon} />
-        <HeaderOption
-          title="me"
-          avatar="https://scontent.fdac37-1.fna.fbcdn.net/v/t1.0-9/150094741_10215272710129463_3678105310006621486_o.jpg?_nc_cat=102&ccb=3&_nc_sid=09cbfe&_nc_ohc=Ee3zMy8nIH4AX_Y3Kh7&_nc_ht=scontent.fdac37-1.fna&oh=fe823a4b1ebadea8297b31854e0d1abb&oe=605666AB"
-        />
+        <HeaderOption title="me" avatar={user.displayName} />
       </div>
     </div>
   );

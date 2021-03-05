@@ -34,14 +34,24 @@ function Login() {
             );
           });
       })
-      .catch((error) => alert(error.massage));
+      .catch((error) => alert(error));
   };
   //login
   const loginToApp = (e) => {
     e.preventDefault();
-    auth.signInWithEmailAndPassword(email, password).then((userAuth) => {
-      dispatch(login({}));
-    });
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        dispatch(
+          login({
+            email: userAuth.user.email,
+            uid: userAuth.user.uid,
+            displayName: userAuth.user.name,
+            photoURL: userAuth.user.profileURL,
+          })
+        );
+      })
+      .catch((error) => alert(error));
   };
   return (
     <div className="login">
